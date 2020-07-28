@@ -15,6 +15,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->connection = Factory::connection($_SERVER['QUEST_DB_URI']);
+        $this->connection = Factory::connection($_ENV['QUEST_DB_URI']);
     }
 }

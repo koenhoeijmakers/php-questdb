@@ -20,6 +20,6 @@
         </whitelist>
     </filter>
     <php>
-        <server name="QUEST_DB_URI" value="questdb:9000"/>
+        <env name="QUEST_DB_URI" value="questdb:9000"/>
     </php>
 </phpunit>
