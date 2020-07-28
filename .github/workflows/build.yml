@@ -37,4 +37,4 @@ jobs:
         run: |
           vendor/bin/phpunit --verbose
         env:
-          QUEST_DB_URI: localhost:${{ job.services.mysql.ports[9000] }}
+          QUEST_DB_URI: 127.0.0.1:${{ job.services.mysql.ports[9000] }}
