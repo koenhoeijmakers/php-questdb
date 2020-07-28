@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  app:
+    build: .docker/php7.4-fpm/
+    restart: always
+    container_name: app
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www
+      - ./.docker/php7.4-fpm/php.ini:/usr/local/etc/php/conf.d/local.ini
+
+  questdb:
+    image: questdb/questdb
+    restart: always
+    container_name: questdb
+    ports:
+      - 9000:9000
+
+volumes:
+  app:
+    driver: local
