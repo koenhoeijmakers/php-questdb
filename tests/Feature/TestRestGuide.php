@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KoenHoeijmakers\QuestDB\Tests\Feature;
 
+use Exception;
 use KoenHoeijmakers\QuestDB\Tests\TestCase;
 
 final class TestRestGuide extends TestCase
@@ -15,14 +16,11 @@ final class TestRestGuide extends TestCase
 
     public function test()
     {
-        $tripsQuery = <<<QUERY
-query=CREATE TABLE trips(pickupDatetime timestamp,
-dropoffDatetime timestamp, passengerCount int, tripDistance double,
-fareAmount double, tipAmount double, taxesAndTolls double, totalAmount double)
-timestamp(pickupDatetime);
+        $query = <<<QUERY
+query=CREATE TABLE measurements(loggedAt timestamp, energyUsage int, randomFloat double, totalAmount double) timestamp(loggedAt);
 QUERY;
 
-        $this->connection->exec($tripsQuery);
+        $this->connection->exec($query);
 
         $this->assertTrue(true);
     }
@@ -31,6 +29,10 @@ QUERY;
     {
         parent::tearDown();
 
-        $this->connection->exec("query=DROP TABLE trips;");
+        try {
+            $this->connection->exec("query=DROP TABLE measurements;");
+        } catch (Exception $exception) {
+            //
+        }
     }
 }
