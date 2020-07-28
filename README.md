@@ -1,4 +1,6 @@
 # PHP QuestDB
+![Build](https://github.com/koenhoeijmakers/php-questdb/workflows/Build/badge.svg)
+
 > This package is work in progress.
 
 A QuestDB client for PHP.
