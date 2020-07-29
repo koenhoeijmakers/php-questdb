@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace KoenHoeijmakers\QuestDB;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use KoenHoeijmakers\QuestDB\DTO\Query;
+use KoenHoeijmakers\QuestDB\Exceptions\ExecutionFailure;
+use stdClass;
+use function json_decode;
 use function urlencode;
 
 final class Connection
@@ -18,16 +23,30 @@ final class Connection
 
     public function imp(string $command)
     {
-        $this->client->post('/imp', [
-            'body' => $command,
-        ]);
+        try {
+            $this->client->post('/imp', [
+                'body' => $command,
+            ]);
+        } catch (ClientException $exception) {
+        }
     }
 
-    public function exec(string $command)
+    public function exec(Query $query): stdClass
     {
-        $this->client->get('/exec', [
-            'query' => $command,
-        ]);
+        try {
+            $response = $this->client->get('/exec', [
+                'query' => [
+                    'query' => $query->getQuery(),
+                    'limit' => $query->getLimit(),
+                    'count' => $query->getCount(),
+                    'nm'    => $query->getNm(),
+                ],
+            ]);
+
+            return json_decode($response->getBody()->getContents());
+        } catch (ClientException $exception) {
+            throw ExecutionFailure::fromResponse($exception->getResponse());
+        }
     }
 
     public function exp(string $command)
