@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KoenHoeijmakers\QuestDB\DTO;
+namespace KoenHoeijmakers\QuestDB;
 
 final class Query
 {
@@ -17,6 +17,11 @@ final class Query
     public function __construct(string $query)
     {
         $this->query = $query;
+    }
+
+    public static function make(string $query)
+    {
+        return new self($query);
     }
 
     public function withCount(): Query

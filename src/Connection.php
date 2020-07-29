@@ -6,7 +6,6 @@ namespace KoenHoeijmakers\QuestDB;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use KoenHoeijmakers\QuestDB\DTO\Query;
 use KoenHoeijmakers\QuestDB\Exceptions\ExecutionFailure;
 use stdClass;
 use function json_decode;
