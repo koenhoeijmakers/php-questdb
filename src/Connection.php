@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use KoenHoeijmakers\QuestDB\Exceptions\ExecutionFailure;
 use stdClass;
+use function file_get_contents;
 use function json_decode;
 use function urlencode;
 
@@ -20,16 +21,33 @@ final class Connection
         $this->client = $client;
     }
 
-    public function imp(string $command)
+    /**
+     * @param  string $filePath
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \KoenHoeijmakers\QuestDB\Exceptions\ExecutionFailure
+     */
+    public function imp(string $filePath)
     {
         try {
-            $this->client->post('/imp', [
-                'body' => $command,
+            $response = $this->client->post('/imp', [
+                'form_params' => [
+                    'data' => file_get_contents($filePath),
+                ],
             ]);
+
+            return json_decode($response->getBody()->getContents());
         } catch (ClientException $exception) {
+            throw ExecutionFailure::fromResponse($exception->getResponse());
         }
     }
 
+    /**
+     * @param  \KoenHoeijmakers\QuestDB\Query $query
+     * @return \stdClass
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \KoenHoeijmakers\QuestDB\Exceptions\ExecutionFailure
+     */
     public function exec(Query $query): stdClass
     {
         try {
